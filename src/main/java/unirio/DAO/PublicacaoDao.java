@@ -38,8 +38,7 @@ public class PublicacaoDao {
         } catch (SQLException ex) {
             Logger.getLogger(PublicacaoDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
+
     }
 
     public Publicacoes consultaPublicacaoPorNome(String titulo) {
@@ -71,6 +70,32 @@ public class PublicacaoDao {
         }
 
         return publicacoes;
+    }
+
+    public Boolean addPublicacao(Integer Id, String titulo, int paginaInicial, int paginaFinal , Integer anoPublicacao) {
+        PreparedStatement stmt = null;
+
+        try {
+            abrirConexao();
+            
+            String sql = "INSERT INTO publicacao(\"Id\", titulo , \"paginaInicial\", \"paginaFinal\" , \"anoPublicacao\") VALUES (?, ?, ?, ?, ?)";
+            
+            stmt = conn.prepareCall(sql);
+            
+            stmt.setInt(1, Id);
+            stmt.setString(2, titulo);
+            stmt.setInt(3, paginaInicial);
+            stmt.setInt(4, paginaFinal);
+            stmt.setInt(5, anoPublicacao);
+            System.out.println("Query: " + stmt.toString());
+            stmt.executeUpdate();
+            fecharConexao();
+            return true;
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+
+        return false;
     }
 
 }

@@ -55,4 +55,18 @@ public class Servico {
         return listaPublicacoes;
         
     } 
+    
+        @WebMethod(operationName = "addPublicacao")      
+        public Boolean addPublicacao(
+                @WebParam (name = "Id")int Id, 
+                @WebParam (name = "titulo") String titulo, 
+                @WebParam (name = "paginaInicial") int paginaInicial, 
+                @WebParam (name = "paginaFinal")int paginaFinal,
+                @WebParam (name = "anoPublicacao")int anoPublicacao){
+        PublicacaoDao dao = new PublicacaoDao();
+        Boolean add =  dao.addPublicacao(Id, titulo, paginaInicial, paginaFinal, anoPublicacao);
+        
+        return add;
+        
+    } 
 }
