@@ -48,9 +48,9 @@ public class Servico {
     }
     
     @WebMethod(operationName = "consultaPublicacaoPorNome")
-    public List<Publicacao> consultaPublicacaoPorNome(@WebParam (name = "nomePublicacao" ) String nomePublicacao){
+    public Publicacoes consultaPublicacaoPorNome(@WebParam (name = "nomePublicacao" ) String nomePublicacao){
         PublicacaoDao dao = new PublicacaoDao();
-        ArrayList<Publicacao> listaPublicacoes =  dao.consultaPublicacaoPorNome(nomePublicacao);
+        Publicacoes listaPublicacoes =  dao.consultaPublicacaoPorNome(nomePublicacao);
         
         return listaPublicacoes;
         

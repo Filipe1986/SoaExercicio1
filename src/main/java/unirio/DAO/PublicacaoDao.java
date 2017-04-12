@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import unirio.Model.Publicacao;
+import unirio.Model.Publicacoes;
 
 /**
  *
@@ -23,7 +24,7 @@ public class PublicacaoDao {
     private static void abrirConexao() {
         try {
             Class.forName("org.postgresql.Driver").newInstance();
-            conn = DriverManager.getConnection(dbUrl, "postgresql", "");
+            conn = DriverManager.getConnection(dbUrl, "postgres", "admin");
 
         } catch (Exception ex) {
             Logger.getLogger(PublicacaoDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -41,21 +42,22 @@ public class PublicacaoDao {
     
     }
 
-    public ArrayList<Publicacao> consultaPublicacaoPorNome(String nomePublicacao) {
+    public Publicacoes consultaPublicacaoPorNome(String titulo) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         ArrayList<Publicacao> registrosDoBanco = new ArrayList<Publicacao>();
+        Publicacoes publicacoes = null;
         Publicacao publicacaoClasse = null;
         try {
             abrirConexao();
-            String sql = "select * from publicacao where publicacao = ?";
+            String sql = "select * from publicacao where titulo = ?";
 
             stmt = conn.prepareCall(sql);
-            stmt.setString(1, nomePublicacao);
+            stmt.setString(1, titulo);
             rs = stmt.executeQuery();
             while (rs.next()) {
                 publicacaoClasse = new Publicacao(
-                        rs.getLong("id"),
+                        rs.getLong("Id"),
                         rs.getString("titulo"),
                         rs.getInt("paginaInicial"),
                         rs.getInt("paginaFinal"),
@@ -63,12 +65,12 @@ public class PublicacaoDao {
 
                 registrosDoBanco.add(publicacaoClasse);
             }
-
+            publicacoes = new Publicacoes(registrosDoBanco);
         } catch (SQLException ex) {
             fecharConexao();
         }
 
-        return registrosDoBanco;
+        return publicacoes;
     }
 
 }
