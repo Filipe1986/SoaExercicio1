@@ -2,8 +2,6 @@ package unirio.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-
 /**
  *
  * @author Filipe-pc

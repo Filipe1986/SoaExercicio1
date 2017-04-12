@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import unirio.Model.Publicacao;
@@ -41,16 +40,19 @@ public class PublicacaoDao {
 
     }
 
-    public Publicacoes consultaPublicacaoPorNome(String titulo) {
+    public Publicacoes consultaPublicacaoPorNome(String tituloInicial) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         ArrayList<Publicacao> registrosDoBanco = new ArrayList<Publicacao>();
         Publicacoes publicacoes = null;
         Publicacao publicacaoClasse = null;
+        
+        String titulo = "%" + tituloInicial.trim() + "%";
+        
         try {
             abrirConexao();
-            String sql = "select * from publicacao where titulo = ?";
-
+            String sql = " select * from publicacao where titulo like ?;";
+            
             stmt = conn.prepareCall(sql);
             stmt.setString(1, titulo);
             rs = stmt.executeQuery();
@@ -61,7 +63,7 @@ public class PublicacaoDao {
                         rs.getInt("paginaInicial"),
                         rs.getInt("paginaFinal"),
                         rs.getInt("anoPublicacao"));
-
+                System.out.println("teste");
                 registrosDoBanco.add(publicacaoClasse);
             }
             publicacoes = new Publicacoes(registrosDoBanco);
@@ -87,7 +89,6 @@ public class PublicacaoDao {
             stmt.setInt(3, paginaInicial);
             stmt.setInt(4, paginaFinal);
             stmt.setInt(5, anoPublicacao);
-            System.out.println("Query: " + stmt.toString());
             stmt.executeUpdate();
             fecharConexao();
             return true;
@@ -97,5 +98,27 @@ public class PublicacaoDao {
 
         return false;
     }
+    
+        public Boolean removePublicacao(Integer Id) {
+        PreparedStatement stmt = null;
+
+        try {
+            abrirConexao();
+            
+            String sql = "delete from publicacao where \"Id\" = ?";
+            stmt = conn.prepareCall(sql);
+            stmt.setInt(1, Id);
+            stmt.executeUpdate();
+            fecharConexao();
+            return true;
+            
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+        return false;
+    }
+    
+    
+  
 
 }
