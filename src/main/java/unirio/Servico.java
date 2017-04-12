@@ -5,11 +5,14 @@
  */
 package unirio;
 
+import java.util.ArrayList;
+import java.util.List;
 import unirio.Model.Publicacoes;
 import unirio.Model.Publicacao;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
+import unirio.DAO.PublicacaoDao;
 import unirio.DAO.PublicacoesDao;
 
 /**
@@ -43,4 +46,13 @@ public class Servico {
         
         return pub.consulta(nomePublicacao);
     }
+    
+    @WebMethod(operationName = "consultaPublicacaoPorNome")
+    public List<Publicacao> consultaPublicacaoPorNome(@WebParam (name = "nomePublicacao" ) String nomePublicacao){
+        PublicacaoDao dao = new PublicacaoDao();
+        ArrayList<Publicacao> listaPublicacoes =  dao.consultaPublicacaoPorNome(nomePublicacao);
+        
+        return listaPublicacoes;
+        
+    } 
 }
