@@ -32,7 +32,7 @@ public class PublicacaoDao {
 
     private static void fecharConexao() {
         try {
-            conn.commit();
+  
             conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(PublicacaoDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,11 +40,11 @@ public class PublicacaoDao {
 
     }
 
-    public Publicacoes consultaPublicacaoPorNome(String tituloInicial) {
+    public ArrayList<Publicacao> consultaPorNome(String tituloInicial) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         ArrayList<Publicacao> registrosDoBanco = new ArrayList<Publicacao>();
-        Publicacoes publicacoes = null;
+      
         Publicacao publicacaoClasse = null;
         
         String titulo = "%" + tituloInicial.trim() + "%";
@@ -66,29 +66,29 @@ public class PublicacaoDao {
                 System.out.println("teste");
                 registrosDoBanco.add(publicacaoClasse);
             }
-            publicacoes = new Publicacoes(registrosDoBanco);
+            
         } catch (SQLException ex) {
             fecharConexao();
         }
 
-        return publicacoes;
+        return registrosDoBanco;
     }
 
-    public Boolean addPublicacao(Integer Id, String titulo, int paginaInicial, int paginaFinal , Integer anoPublicacao) {
+    public Boolean addPublicacao( String titulo, int paginaInicial, int paginaFinal , Integer anoPublicacao) {
         PreparedStatement stmt = null;
 
         try {
             abrirConexao();
             
-            String sql = "INSERT INTO publicacao(\"Id\", titulo , \"paginaInicial\", \"paginaFinal\" , \"anoPublicacao\") VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO publicacao( titulo , \"paginaInicial\", \"paginaFinal\" , \"anoPublicacao\") VALUES (?, ?, ?, ?)";
             
             stmt = conn.prepareCall(sql);
             
-            stmt.setInt(1, Id);
-            stmt.setString(2, titulo);
-            stmt.setInt(3, paginaInicial);
-            stmt.setInt(4, paginaFinal);
-            stmt.setInt(5, anoPublicacao);
+      
+            stmt.setString(1, titulo);
+            stmt.setInt(2, paginaInicial);
+            stmt.setInt(3, paginaFinal);
+            stmt.setInt(4, anoPublicacao);
             stmt.executeUpdate();
             fecharConexao();
             return true;
@@ -105,7 +105,7 @@ public class PublicacaoDao {
         try {
             abrirConexao();
             
-            String sql = "delete from publicacao where \"Id\" = ?";
+            String sql = "Delete from publicacao where \"Id\" = ?";
             stmt = conn.prepareCall(sql);
             stmt.setInt(1, Id);
             stmt.executeUpdate();
@@ -117,8 +117,4 @@ public class PublicacaoDao {
         }
         return false;
     }
-    
-    
-  
-
 }

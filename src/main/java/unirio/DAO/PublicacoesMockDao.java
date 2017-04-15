@@ -8,12 +8,11 @@ import unirio.Model.Publicacoes;
  * @author Filipe-pc
  * Mock para simulação de banco de dados populado
  */
-public class PublicacoesDao {
+public class PublicacoesMockDao {
 
     private Publicacoes publicacoes;
-    public PublicacoesDao() {
+    public PublicacoesMockDao() {
         publicacoes = new Publicacoes(new Publicacao(1, "livro 1", 10, 100, 2016));
-
         publicacoes.addPublicacao(new Publicacao(2, "Revista 1",  5, 35, 2013));
         publicacoes.addPublicacao(new Publicacao(3, "Revista 2",  5, 205, 2013));
         publicacoes.addPublicacao(new Publicacao(4, "Artigo 1",  5,     135, 2015));
