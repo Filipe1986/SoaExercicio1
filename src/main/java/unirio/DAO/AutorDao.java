@@ -8,25 +8,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import unirio.Model.Autor;
 import unirio.Model.Publicacao;
-import unirio.Model.Publicacoes;
 
 /**
  *
  * @author Filipe-pc
  */
-public class PublicacaoDao {
-
-    private static String dbUrl = "jdbc:postgresql://localhost:5432/publicacoes";
+public class AutorDao {
+    
+        private static String dbUrl = "jdbc:postgresql://localhost:5432/publicacoes";
     private static Connection conn = null;
-
-    private static void abrirConexao() {
+    
+    
+        private static void abrirConexao() {
         try {
             Class.forName("org.postgresql.Driver").newInstance();
             conn = DriverManager.getConnection(dbUrl, "postgres", "admin");
 
         } catch (Exception ex) {
-            Logger.getLogger(PublicacaoDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AutorDao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -35,59 +36,62 @@ public class PublicacaoDao {
 
             conn.close();
         } catch (SQLException ex) {
-            Logger.getLogger(PublicacaoDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AutorDao.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-
-    public ArrayList<Publicacao> consultaPorNome(String tituloInicial) {
+  //-----------------------------------------
+    
+    
+    
+    
+    public ArrayList<Autor> consultaAutorPorNome(String nomeInicial) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        ArrayList<Publicacao> registrosDoBanco = new ArrayList<Publicacao>();
+        ArrayList<Autor> registros = new ArrayList<Autor>();
 
-        Publicacao publicacaoClasse = null;
+        Autor autor = null;
 
-        String titulo = "%" + tituloInicial.trim() + "%";
+        String nome = "%" + nomeInicial.trim() + "%";
 
         try {
             abrirConexao();
-            String sql = " select * from publicacao where titulo like ?;";
+            String sql = " select * from autor where nome like ?;";
 
             stmt = conn.prepareCall(sql);
-            stmt.setString(1, titulo);
+            stmt.setString(1, nome);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                publicacaoClasse = new Publicacao(
+                autor = new Autor(
                         rs.getLong("Id"),
-                        rs.getString("titulo"),
-                        rs.getInt("paginaInicial"),
-                        rs.getInt("paginaFinal"),
-                        rs.getInt("anoPublicacao"));
-                System.out.println("teste");
-                registrosDoBanco.add(publicacaoClasse);
+                        rs.getString("nome"),
+                        rs.getString("nomeDeCitacao"),
+                        rs.getString("cpf"));
+              
+                registros.add(autor);
             }
 
         } catch (SQLException ex) {
             fecharConexao();
         }
 
-        return registrosDoBanco;
+        return registros;
     }
 
-    public Boolean addPublicacao(String titulo, int paginaInicial, int paginaFinal, Integer anoPublicacao) {
+    public Boolean addAutor(String nomeAutor, String nomeDeCitacao, String  cpf) {
         PreparedStatement stmt = null;
 
         try {
             abrirConexao();
 
-            String sql = "INSERT INTO publicacao( titulo , \"paginaInicial\", \"paginaFinal\" , \"anoPublicacao\") VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO publicacao( nomeAutor , nomeDeCitacao , cpf ) VALUES (?, ?, ?)";
 
             stmt = conn.prepareCall(sql);
 
-            stmt.setString(1, titulo);
-            stmt.setInt(2, paginaInicial);
-            stmt.setInt(3, paginaFinal);
-            stmt.setInt(4, anoPublicacao);
+            stmt.setString(1, nomeAutor);
+            stmt.setString(2, nomeDeCitacao );
+            stmt.setString(3,  cpf);
+
             stmt.executeUpdate();
             fecharConexao();
             return true;
@@ -98,13 +102,13 @@ public class PublicacaoDao {
         return false;
     }
 
-    public Boolean removePublicacao(Integer Id) {
+    public Boolean removeAutor(Integer Id) {
         PreparedStatement stmt = null;
 
         try {
             abrirConexao();
 
-            String sql = "Delete from publicacao where \"Id\" = ?";
+            String sql = "Delete from autor where \"Id\" = ?";
             stmt = conn.prepareCall(sql);
             stmt.setInt(1, Id);
             stmt.executeUpdate();
@@ -117,17 +121,17 @@ public class PublicacaoDao {
         return false;
     }
 
-    public int getPublicacaoIdPorNome(String titulo) {
+    public int getAutorIdPorNome(String nomeAutor) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         int id = -1;
 
         try {
             abrirConexao();
-            String sql = " select * from publicacao where titulo like ?";
+            String sql = " select * from autor where nomeAutor like ?";
 
             stmt = conn.prepareCall(sql);
-            stmt.setString(1, titulo);
+            stmt.setString(1, nomeAutor);
             System.out.println(stmt.toString());
             rs = stmt.executeQuery();
             while (rs.next()) {
@@ -143,21 +147,20 @@ public class PublicacaoDao {
     }
     
     
-     public Boolean alteraPublicacao(int Id, String titulo, int paginaInicial, int paginaFinal, Integer anoPublicacao) {
+     public Boolean alteraAutor(int Id, String nomeAutor, String nomeDeCitacao, String  cpf) {
         PreparedStatement stmt = null;
 
         try {
             abrirConexao();
 
-            String sql = "Update  publicacao set titulo = ? , \"paginaInicial\" = ?, \"paginaFinal\" = ? , \"anoPublicacao\" = ? where \"Id\" = ?";
+            String sql = "Update  publicacao set nomeAutor = ? , nomeDeCitacao = ?, cpf = ? where \"Id\" = ?";
                         
             stmt = conn.prepareCall(sql);
 
-            stmt.setString(1, titulo);
-            stmt.setInt(2, paginaInicial);
-            stmt.setInt(3, paginaFinal);
-            stmt.setInt(4, anoPublicacao);
-            stmt.setInt(5, Id);
+            stmt.setString(1, nomeAutor);
+            stmt.setString(2, nomeDeCitacao);
+            stmt.setString(3, cpf);
+            stmt.setInt(4, Id);
             stmt.executeUpdate();
             fecharConexao();
             return true;
@@ -167,4 +170,7 @@ public class PublicacaoDao {
 
         return false;
     }
+    
+    
+    
 }

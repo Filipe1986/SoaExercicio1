@@ -11,12 +11,13 @@ package unirio.Model;
  */
 public class Autor {
     
+    private Long id;
     private String nome;
     private String nomeDeCitacao;
     private String cpf;
-    private Long id;
+    
 
-    public Autor(String nome, String nomeDeCitacao, String cpf, Long id) {
+    public Autor( Long id, String nome, String nomeDeCitacao, String cpf) {
         this.nome = nome;
         this.nomeDeCitacao = nomeDeCitacao;
         this.cpf = cpf;

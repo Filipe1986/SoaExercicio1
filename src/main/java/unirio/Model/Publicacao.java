@@ -67,19 +67,5 @@ public class Publicacao implements Serializable{
     public void setAnoPublicacao(int anoPublicacao) {
         this.anoPublicacao = anoPublicacao;
     }
-
-    @Override
-    public String toString() {
-        return "Publicacao{" + "id=" + id + ", titulo=" + titulo + ", paginaInicial=" + paginaInicial + ", paginaFinal=" + paginaFinal + ", anoPublicacao=" + anoPublicacao + '}';
-    }
-    
-    public String conteudo() {
-        return "Publicacao{" + "id=" + id + ", titulo=" + titulo + ", paginaInicial=" + paginaInicial + ", paginaFinal=" + paginaFinal + ", anoPublicacao=" + anoPublicacao + '}';
-    }
-    
-    
-    
-    
-    
     
 }
